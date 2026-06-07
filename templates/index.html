@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>SMART ENERGY PREDICTION</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>ELECTRICITY DASHBOARD</h1>
+
+    <h2>SMART ENERGY PREDICTION</h2>
+
+    <form action="/predict" method="POST">
+
+        <div id="devices">
+
+            <div class="device-row">
+
+                <select name="device[]" onchange="setWatt(this)">
+
+                    <option value="">⚡ Select Appliance</option>
+
+                    <!-- HOME -->
+
+                    <option value="Fan">🌀 Fan</option>
+                    <option value="LED Bulb">💡 LED Bulb</option>
+                    <option value="Tube Light">🔆 Tube Light</option>
+                    <option value="TV">📺 TV</option>
+                    <option value="Smart TV">📺 Smart TV</option>
+                    <option value="Fridge">🧊 Fridge</option>
+                    <option value="Refrigerator">🧊 Refrigerator</option>
+                    <option value="Laptop">💻 Laptop</option>
+                    <option value="Desktop">🖥 Desktop</option>
+                    <option value="Gaming PC">🎮 Gaming PC</option>
+                    <option value="Monitor">🖥 Monitor</option>
+                    <option value="Printer">🖨 Printer</option>
+                    <option value="Scanner">📄 Scanner</option>
+                    <option value="WiFi Router">📡 WiFi Router</option>
+                    <option value="Projector">📽 Projector</option>
+                    <option value="CCTV">📷 CCTV Camera</option>
+                    <option value="Server">🗄 Server</option>
+
+                    <option value="AC">❄ Air Conditioner</option>
+                    <option value="Air Cooler">🌬 Air Cooler</option>
+                    <option value="Air Purifier">🌫 Air Purifier</option>
+                    <option value="Heater">🔥 Heater</option>
+                    <option value="Water Heater">🚿 Water Heater</option>
+
+                    <option value="Washing Machine">🧺 Washing Machine</option>
+                    <option value="Vacuum Cleaner">🧹 Vacuum Cleaner</option>
+                    <option value="Dishwasher">🍽 Dishwasher</option>
+
+                    <option value="Microwave">🍲 Microwave</option>
+                    <option value="Mixer Grinder">🥤 Mixer Grinder</option>
+                    <option value="Rice Cooker">🍚 Rice Cooker</option>
+                    <option value="Electric Kettle">☕ Electric Kettle</option>
+                    <option value="Electric Stove">🍳 Electric Stove</option>
+                    <option value="Toaster">🍞 Toaster</option>
+                    <option value="Coffee Machine">☕ Coffee Machine</option>
+
+                    <option value="Iron Box">👔 Iron Box</option>
+                    <option value="Hair Dryer">💨 Hair Dryer</option>
+
+                    <option value="Mobile Charger">📱 Mobile Charger</option>
+                    <option value="Speaker">🔊 Speaker</option>
+                    <option value="Clock">⏰ Digital Clock</option>
+
+                    <option value="Water Pump">🚰 Water Pump</option>
+                    <option value="Inverter">🔋 Inverter</option>
+
+                    <!-- OFFICE -->
+
+                    <option value="Photocopier">📑 Photocopier</option>
+                    <option value="Attendance Machine">🧾 Attendance Machine</option>
+                    <option value="Smart Board">📋 Smart Board</option>
+                    <option value="NAS Storage">💾 NAS Storage</option>
+                    <option value="Lift">🛗 Lift</option>
+
+                </select>
+
+                <input type="number"
+                name="watt[]"
+                placeholder="Watt">
+
+                <input type="number"
+                name="hours[]"
+                placeholder="Hours">
+
+                <input type="number"
+                name="minutes[]"
+                placeholder="Minutes">
+
+                <input type="number"
+                name="qty[]"
+                placeholder="Qty">
+
+                <button type="button"
+                class="remove-btn"
+                onclick="removeDevice(this)">
+                ❌
+                </button>
+
+            </div>
+
+        </div>
+
+        <button type="button"
+        onclick="addDevice()">
+        ➕ Add Device
+        </button>
+
+        <br><br>
+
+        <select name="season">
+            <option>Summer</option>
+            <option>Winter</option>
+            <option>Rainy</option>
+        </select>
+
+        <select name="house">
+            <option>House</option>
+            <option>Flat</option>
+            <option>Office</option>
+        </select>
+
+        <br><br>
+
+        <button type="submit">
+        ⚡ Predict
+        </button>
+
+    </form>
+
+    {% if units %}
+
+    <div class="result">
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>⚡ Units</h3>
+                <p>{{ units }}</p>
+            </div>
+
+            <div class="card">
+                <h3>💰 Bill</h3>
+                <p>₹{{ bill }}</p>
+            </div>
+
+            <div class="card">
+                <h3>📅 Daily</h3>
+                <p>{{ daily }}</p>
+            </div>
+
+            <div class="card">
+                <h3>📈 Yearly</h3>
+                <p>₹{{ yearly }}</p>
+            </div>
+
+        </div>
+
+        <div class="graphs">
+
+            <div class="graph-box">
+                <h3>📊 Appliance Comparison</h3>
+                <img src="{{ url_for('static', filename='bar.png') }}">
+            </div>
+
+            <div class="graph-box">
+                <h3>📈 Usage Trend</h3>
+                <img src="{{ url_for('static', filename='line.png') }}">
+            </div>
+
+            <div class="graph-box">
+                <h3>🥧 Energy Distribution</h3>
+                <img src="{{ url_for('static', filename='pie.png') }}">
+            </div>
+
+        </div>
+
+        <br>
+
+        <a href="/download">
+
+            <button class="download-btn">
+            📄 Download Report PDF
+            </button>
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+    <div class="creator-box">
+
+        Created and Designed By
+
+        <span>ABHIJITH P</span>
+
+    </div>
+
+</div>
+
+<script>
+
+function addDevice(){
+
+    let div = document.createElement("div");
+
+    div.className = "device-row";
+
+    div.innerHTML =
+    document.querySelector(".device-row").innerHTML;
+
+    document.getElementById("devices").appendChild(div);
+}
+
+function removeDevice(btn){
+
+    let rows = document.querySelectorAll(".device-row");
+
+    if(rows.length > 1){
+        btn.parentElement.remove();
+    }
+}
+
+function setWatt(select){
+
+    let map = {
+
+        "Fan":75,
+        "LED Bulb":9,
+        "Tube Light":40,
+        "TV":120,
+        "Smart TV":150,
+        "Fridge":200,
+        "Refrigerator":250,
+        "Laptop":65,
+        "Desktop":250,
+        "Gaming PC":500,
+        "Monitor":40,
+        "Printer":100,
+        "Scanner":90,
+        "WiFi Router":15,
+        "Projector":300,
+        "CCTV":50,
+        "Server":500,
+
+        "AC":1500,
+        "Air Cooler":200,
+        "Air Purifier":60,
+        "Heater":2000,
+        "Water Heater":2000,
+
+        "Washing Machine":500,
+        "Vacuum Cleaner":1400,
+        "Dishwasher":1800,
+
+        "Microwave":1200,
+        "Mixer Grinder":750,
+        "Rice Cooker":700,
+        "Electric Kettle":1500,
+        "Electric Stove":2000,
+        "Toaster":800,
+        "Coffee Machine":1000,
+
+        "Iron Box":1000,
+        "Hair Dryer":1200,
+
+        "Mobile Charger":10,
+        "Speaker":80,
+        "Clock":5,
+
+        "Water Pump":750,
+        "Inverter":800,
+
+        "Photocopier":600,
+        "Attendance Machine":35,
+        "Smart Board":250,
+        "NAS Storage":150,
+        "Lift":3000
+    };
+
+    let wattInput =
+    select.parentElement.querySelector(
+    'input[name="watt[]"]'
+    );
+
+    wattInput.value = map[select.value] || "";
+}
+
+</script>
+
+</body>
+</html>
